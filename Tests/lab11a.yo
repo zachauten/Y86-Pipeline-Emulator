@@ -1,0 +1,25 @@
+                      | 
+                      | #
+                      | #   This file tests the JE instruction
+                      | #
+  0x000: 30f004000000 |     irmovl  4, %eax
+  0x006: 30f103000000 |     irmovl  3, %ecx
+  0x00c: 6010         |     addl    %ecx, %eax
+  0x00e: 7346000000   |     je   target1
+  0x013: c001000000   |     dump 1                 #This should be executed
+  0x018: c001000000   |     dump 1                 #This should be executed
+  0x01d: 30f003000000 |     irmovl  3, %eax
+  0x023: 30f1fdffffff |     irmovl  -3, %ecx
+  0x029: 6010         |     addl    %ecx, %eax
+  0x02b: 733b000000   |     je target2
+  0x030: c004000000   |     dump 4                 #This shouldn't be executed
+  0x035: c004000000   |     dump 4                 #This shouldn't be executed
+  0x03a: 00           |     halt
+  0x03b:              | target2:
+  0x03b: c001000000   |     dump 1                 #This should be executed
+  0x040: c001000000   |     dump 1                 #This should be executed
+  0x045: 00           |     halt                   #program will stop here
+  0x046:              | target1:
+  0x046: 10           |     nop                    #control will go here and then
+  0x047: 10           |     nop                    #back to the statement after the jump
+  0x048: 00           |     halt

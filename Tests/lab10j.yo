@@ -1,0 +1,99 @@
+                      | 
+                      | #tests forwarding when the ESP register is involved
+  0x000: 30f400040000 |     irmovl Stack, %esp
+  0x006: 30f0bc0a0000 |     irmovl 0xabc, %eax
+  0x00c: a00f         |     pushl %eax      # should be xabc
+  0x00e: b01f         |     popl  %ecx      # should be xabc, Stack pointer should be 0x400
+  0x010: c005000000   |     dump 5        
+                      | #
+  0x015: 30f400040000 |     irmovl Stack, %esp
+  0x01b: 30f0bc0a0000 |     irmovl 0xabc, %eax
+  0x021: 30f3ef0d0000 |     irmovl 0xdef, %ebx
+  0x027: a00f         |     pushl %eax       # %eax = xabc
+  0x029: b01f         |     popl  %ecx       # %ecx = xabc
+  0x02b: a03f         |     pushl %ebx       # %ebx = xdef
+  0x02d: b02f         |     popl  %edx       # %edx = xdef
+  0x02f: c005000000   |     dump 5           # %esp = x400
+                      | #
+  0x034: 30f400040000 |     irmovl Stack, %esp
+  0x03a: 30f0bc0a0000 |     irmovl 0xabc, %eax
+  0x040: 30f1ef0d0000 |     irmovl 0xdef, %ecx
+  0x046: 30f311010000 |     irmovl 0x111, %ebx
+  0x04c: a00f         |     pushl %eax       # %eax = 0xabc
+  0x04e: 10           |     nop
+  0x04f: a01f         |     pushl %ecx       # %ecx = 0xdef
+  0x051: 10           |     nop
+  0x052: a03f         |     pushl %ebx       # %ebx = 0x111
+  0x054: 10           |     nop
+  0x055: b02f         |     popl  %edx       # %edx = 0x111
+  0x057: 10           |     nop
+  0x058: b06f         |     popl  %esi       # %esi = 0xdef
+  0x05a: 10           |     nop
+  0x05b: b07f         |     popl  %edi       # %edi = 0xabc
+  0x05d: c005000000   |     dump 5           # %esp = 0x100 
+                      | #
+  0x062: 30f000000000 |     irmovl 0, %eax
+  0x068: 30f100000000 |     irmovl 0, %ecx
+  0x06e: 30f200000000 |     irmovl 0, %edx
+  0x074: 30f300000000 |     irmovl 0, %ebx
+  0x07a: 30f700000000 |     irmovl 0, %edi
+  0x080: 30f600000000 |     irmovl 0, %esi
+  0x086: 30f400040000 |     irmovl Stack, %esp
+  0x08c: a04f         |     pushl %esp             #This should push original value of esp (0x400)
+  0x08e: 10           |     nop
+  0x08f: b00f         |     popl %eax
+  0x091: c001000000   |     dump 1                 #eax should be 0x400
+                      | #
+  0x096: 30f0bc0a0000 |     irmovl 0xabc, %eax
+  0x09c: 30f100000000 |     irmovl 0, %ecx
+  0x0a2: 30f200000000 |     irmovl 0, %edx
+  0x0a8: 30f300000000 |     irmovl 0, %ebx
+  0x0ae: 30f700000000 |     irmovl 0, %edi
+  0x0b4: 30f600000000 |     irmovl 0, %esi
+  0x0ba: 30f400040000 |     irmovl Stack, %esp
+  0x0c0: a00f         |     pushl %eax             
+  0x0c2: b04f         |     popl %esp              #This should set esp to value pushed to memory (abc)
+  0x0c4: c001000000   |     dump 1
+                      | #
+  0x0c9: 30f000000000 |     irmovl 0, %eax
+  0x0cf: 30f100000000 |     irmovl 0, %ecx
+  0x0d5: 30f200000000 |     irmovl 0, %edx
+  0x0db: 30f300000000 |     irmovl 0, %ebx
+  0x0e1: 30f700000000 |     irmovl 0, %edi
+  0x0e7: 30f600000000 |     irmovl 0, %esi
+  0x0ed: 30f400040000 |     irmovl Stack, %esp
+  0x0f3: a04f         |     pushl %esp             #pushes original value of esp (Stack)      
+  0x0f5: a04f         |     pushl %esp             #pushes Stack - 4 
+  0x0f7: a04f         |     pushl %esp             #pushes Stack - 8 
+  0x0f9: b04f         |     popl %esp              
+  0x0fb: 10           |     nop
+  0x0fc: b04f         |     popl %esp            
+  0x0fe: 10           |     nop
+  0x0ff: b04f         |     popl %esp              
+  0x101: c005000000   |     dump 5
+                      | ##
+  0x106: 30f0fcffffff |     irmovl -4, %eax
+  0x10c: 30f400040000 |     irmovl Stack, %esp
+  0x112: 6004         |     addl %eax, %esp
+  0x114: a04f         |     pushl %esp            #pushes Stack - 4
+  0x116: b00f         |     popl  %eax            # %eax should be Stack - 4
+  0x118: c001000000   |     dump 1
+                      | ##
+  0x11d: 30f400040000 |     irmovl Stack, %esp
+  0x123: 30f0bc0a0000 |     irmovl 0xabc, %eax
+  0x129: a00f         |     pushl %eax
+  0x12b: 30f0ef0d0000 |     irmovl 0xdef, %eax
+  0x131: a00f         |     pushl %eax
+  0x133: 30f004000000 |     irmovl 4, %eax
+  0x139: 6004         |     addl %eax, %esp
+  0x13b: b00f         |     popl %eax            #eax should be abc
+  0x13d: c005000000   |     dump 5
+  0x142: 00           |     halt
+  0x143: 10           |     nop
+  0x144: 10           |     nop
+  0x145: 10           |     nop
+  0x146: 10           |     nop
+  0x400:              |     .pos 0x400
+  0x400: 00000000     | Stack:  .long 0
+  0x404: 00000000     |         .long 0
+  0x408: 00000000     |         .long 0

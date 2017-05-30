@@ -1,0 +1,35 @@
+                      | 
+                      | #
+                      | #    This file tests the call and return instructions
+                      | #
+  0x000:              |     .pos 0
+  0x000: 30f400010000 |     irmovl Stack, %esp
+  0x006: 30f500010000 |     irmovl Stack, %ebp
+  0x00c: 7011000000   |     jmp Main
+                      | #
+  0x011: 30f10b000000 | Main:   irmovl $11, %ecx
+  0x017: a01f         |         pushl %ecx                  #push parameter
+  0x019: 803a000000   |         call AddOne                 #result is returned in %eax
+  0x01e: b01f         |         popl %ecx                   #pop parameter
+  0x020: c007000000   |         dump 7
+  0x025: 30f10d000000 |         irmovl $13, %ecx
+  0x02b: a01f         |         pushl %ecx
+  0x02d: 803a000000   |         call AddOne
+  0x032: b01f         |         popl %ecx
+  0x034: c007000000   |         dump 7
+  0x039: 00           |         halt
+                      | #
+  0x03a: a05f         | AddOne: pushl %ebp
+  0x03c: 2045         |         rrmovl %esp, %ebp
+  0x03e: 500508000000 |         mrmovl 8(%ebp), %eax         #eax set to parameter
+  0x044: 30f201000000 |         irmovl 1, %edx
+  0x04a: 6020         |         addl %edx, %eax              
+  0x04c: 2054         |         rrmovl %ebp, %esp            #eax set to the result
+  0x04e: b05f         |         popl %ebp
+  0x050: 90           |         ret                          #need 3 nops since no stalling
+  0x051: 10           |         nop
+  0x052: 10           |         nop
+  0x053: 10           |         nop
+  0x100:              |         .pos 0x100
+  0x100:              | Stack:
+                      | 

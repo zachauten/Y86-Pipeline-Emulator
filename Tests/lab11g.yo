@@ -1,0 +1,18 @@
+                      | 
+                      | #
+                      | #   This file tests the JMP instruction.
+                      | #
+  0x000: 10           |     nop
+  0x001: 10           |     nop
+  0x002: 700c000000   |     jmp target1
+  0x007: c004000000   |     dump 4            #won't be executed
+  0x00c:              | target1:
+  0x00c: c001000000   |     dump 1
+  0x011: 701b000000   |     jmp target2
+  0x016: c004000000   |     dump 4           #won't be executed
+  0x01b:              | target2:
+  0x01b: c001000000   |     dump 1
+  0x020: 7025000000   |     jmp target3
+  0x025:              | target3:
+  0x025: c001000000   |     dump 1
+  0x02a: 00           |     halt

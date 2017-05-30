@@ -1,0 +1,35 @@
+                      | 
+                      | #
+                      | #   This file tests the JGE instruction
+                      | #
+  0x000: 30f004000000 |     irmovl  4, %eax
+  0x006: 30f1fbffffff |     irmovl  -5, %ecx
+  0x00c: 6010         |     addl    %ecx, %eax     #result is less than 0
+  0x00e: 753b000000   |     jge   target1          #don't take branch
+  0x013: c001000000   |     dump 1                 #This should be executed
+  0x018: c001000000   |     dump 1                 #This should be executed
+  0x01d: 30f004000000 |     irmovl 4, %eax
+  0x023: 30f1fcffffff |     irmovl -4, %ecx
+  0x029: 6010         |     addl    %ecx, %eax     #result is equal to 0
+  0x02b: 753e000000   |     jge  target2           #take branch   
+  0x030: c004000000   |     dump 4
+  0x035: c004000000   |     dump 4
+  0x03a: 00           |     halt
+  0x03b:              | target1:
+  0x03b: 10           |     nop                    #control will be transferred
+  0x03c: 10           |     nop                    #here and then back to dump 1
+  0x03d: 00           |     halt
+  0x03e:              | target2:    
+  0x03e: c001000000   |     dump 1                 #This should be executed
+  0x043: c001000000   |     dump 1                 #This should be executed
+  0x048: 30f004000000 |     irmovl  4, %eax
+  0x04e: 30f1fdffffff |     irmovl  -3, %ecx
+  0x054: 6010         |     addl    %ecx, %eax     #result is greater than 0
+  0x056: 7566000000   |     jge target3
+  0x05b: c004000000   |     dump 4                 #This shouldn't be executed
+  0x060: c004000000   |     dump 4                 #This shouldn't be executed
+  0x065: 00           |     halt
+  0x066:              | target3:
+  0x066: c001000000   |     dump 1                 #This should be executed
+  0x06b: c001000000   |     dump 1                 #This should be executed
+  0x070: 00           |     halt

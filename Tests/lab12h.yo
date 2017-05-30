@@ -1,0 +1,15 @@
+                      | 
+                      | #  
+                      | #   This program tests the stall required after a mrmovl instruction
+                      | #
+  0x000: 30f400010000 |     irmovl Stack, %esp
+  0x006: 30f003000000 |     irmovl 3, %eax
+  0x00c: a00f         |     pushl %eax
+  0x00e: c007000000   |     dump 7
+  0x013: b03f         |     popl %ebx     
+  0x015: a03f         |     pushl %ebx  #this instruction will be stalled
+  0x017: b01f         |     popl %ecx
+  0x019: c001000000   |     dump 1
+  0x01e: 00           |     halt
+  0x100:              |     .pos 0x100
+  0x100: 00000000     | Stack:  .long 0

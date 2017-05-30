@@ -1,0 +1,25 @@
+                      | 
+                      | #
+                      | #   This file tests the JL instruction
+                      | #
+  0x000: 30f004000000 |     irmovl  4, %eax
+  0x006: 30f1fbffffff |     irmovl  -5, %ecx
+  0x00c: 6010         |     addl    %ecx, %eax     #result is less than 0
+  0x00e: 721e000000   |     jl  target1
+  0x013: c004000000   |     dump 4                 #This shouldn't be executed
+  0x018: c004000000   |     dump 4                 #This shouldn't be executed
+  0x01d: 00           |     halt
+  0x01e:              | target1:
+  0x01e: c001000000   |     dump 1                 #This should be executed
+  0x023: c001000000   |     dump 1                 #This should be executed
+  0x028: 30f004000000 |     irmovl  4, %eax
+  0x02e: 30f1fdffffff |     irmovl  -3, %ecx
+  0x034: 6010         |     addl    %ecx, %eax     #result is greater than 0
+  0x036: 7246000000   |     jl target2
+  0x03b: c001000000   |     dump 1                 #This should be executed
+  0x040: c001000000   |     dump 1                 #This should be executed
+  0x045: 00           |     halt
+  0x046:              | target2:
+  0x046: 10           |     nop                    #control will be transferred here 
+  0x047: 10           |     nop                    #and then go back
+  0x048: 00           |     halt

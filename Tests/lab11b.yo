@@ -1,0 +1,35 @@
+                      | 
+                      | #
+                      | #   This file tests the JLE instruction
+                      | #
+  0x000: 30f004000000 |     irmovl  4, %eax
+  0x006: 30f1fbffffff |     irmovl  -5, %ecx
+  0x00c: 6010         |     addl    %ecx, %eax     #result is less than 0
+  0x00e: 711e000000   |     jle   target1
+  0x013: c001000000   |     dump 1                 #This shouldn't be executed
+  0x018: c001000000   |     dump 1                 #This shouldn't be executed
+  0x01d: 00           |     halt
+  0x01e:              | target1:
+  0x01e: c004000000   |     dump 4                 #This should be executed
+  0x023: c004000000   |     dump 4                 #This should be executed
+  0x028: 30f004000000 |     irmovl  4, %eax
+  0x02e: 30f1fcffffff |     irmovl  -4, %ecx
+  0x034: 6010         |     addl    %ecx, %eax     #result is equal to 0
+  0x036: 7146000000   |     jle target2
+  0x03b: c001000000   |     dump 1                 #This shouldn't be executed
+  0x040: c001000000   |     dump 1                 #This shouldn't be executed
+  0x045: 00           |     halt
+  0x046:              | target2:
+  0x046: c004000000   |     dump 4                 #This should be executed
+  0x04b: c004000000   |     dump 4                 #This should be executed
+  0x050: 30f005000000 |     irmovl  5, %eax
+  0x056: 30f1fcffffff |     irmovl  -4, %ecx
+  0x05c: 6010         |     addl  %ecx, %eax       #result is greater than 0
+  0x05e: 716e000000   |     jle target3
+  0x063: c004000000   |     dump 4                 #This should be executed
+  0x068: c004000000   |     dump 4                 #This should be executed
+  0x06d: 00           |     halt
+  0x06e:              | target3:
+  0x06e: 10           |     nop                    #control will branch here and
+  0x06f: 10           |     nop                    #then back to dump 4
+  0x070: 00           |     halt

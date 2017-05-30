@@ -1,0 +1,20 @@
+                      | 
+                      | #
+                      | #   test exception handling
+                      | #
+  0x000: 30f0fdffffff |     irmovl $-3, %eax
+  0x006: 30f128000000 |     irmovl addr, %ecx
+  0x00c: 10           |     nop                      #need nop until stalls are implemented
+  0x00d: 501100000000 |     mrmovl 0(%ecx), %ecx     #%ecx is set to 0xffffffff
+  0x013: 10           |     nop
+  0x014: 502100000000 |     mrmovl 0(%ecx), %edx     #this will cause a memory error
+  0x01a: 6200         |     andl %eax, %eax          #shouldn't set condition codes
+  0x01c: c001000000   |     dump 1                   #won't be executed because of the error
+  0x021: 00           |     halt
+  0x022: 10           |     nop
+  0x023: 10           |     nop
+  0x024: 10           |     nop
+  0x025: 10           |     nop
+                      | #
+  0x028:              |     .align 4
+  0x028: ffffffff     | addr:  .long 0xffffffff

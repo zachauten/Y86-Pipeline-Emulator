@@ -1,0 +1,97 @@
+                      | 
+                      | #This program tests forwarding into decode stage for valA
+                      | #Value being forwarded is produced by an IRMOVL instruction. 
+  0x000: 30f001000000 |     irmovl 1, %eax
+  0x006: 2001         |     rrmovl %eax, %ecx
+  0x008: c001000000   |     dump 1
+  0x00d: 30f102000000 |     irmovl 2, %ecx
+  0x013: 2012         |     rrmovl %ecx, %edx
+  0x015: c001000000   |     dump 1
+  0x01a: 30f203000000 |     irmovl 3, %edx
+  0x020: 2023         |     rrmovl %edx, %ebx
+  0x022: c001000000   |     dump 1
+  0x027: 30f304000000 |     irmovl 4, %ebx
+  0x02d: 2034         |     rrmovl %ebx, %esp
+  0x02f: c001000000   |     dump 1
+  0x034: 30f405000000 |     irmovl 5, %esp
+  0x03a: 2045         |     rrmovl %esp, %ebp
+  0x03c: c001000000   |     dump 1
+  0x041: 30f506000000 |     irmovl 6, %ebp
+  0x047: 2056         |     rrmovl %ebp, %esi
+  0x049: c001000000   |     dump 1
+  0x04e: 30f607000000 |     irmovl 7, %esi
+  0x054: 2067         |     rrmovl %esi, %edi
+  0x056: c001000000   |     dump 1
+  0x05b: 30f708000000 |     irmovl 8, %edi 
+  0x061: 2070         |     rrmovl %edi, %eax
+  0x063: c001000000   |     dump 1
+  0x068: 30f000000000 |     irmovl 0, %eax
+  0x06e: 30f100000000 |     irmovl 0, %ecx
+  0x074: 30f200000000 |     irmovl 0, %edx
+  0x07a: 30f300000000 |     irmovl 0, %ebx
+  0x080: 30f400000000 |     irmovl 0, %esp
+  0x086: 30f600000000 |     irmovl 0, %esi
+  0x08c: 30f700000000 |     irmovl 0, %edi
+  0x092: 30f500000000 |     irmovl 0, %ebp
+  0x098: 30f001000000 |     irmovl 1, %eax
+  0x09e: 6001         |     addl %eax, %ecx
+  0x0a0: c001000000   |     dump 1                  #%ecx should be 1
+  0x0a5: 30f102000000 |     irmovl 2, %ecx
+  0x0ab: 10           |     nop
+  0x0ac: 6110         |     subl   %ecx, %eax      
+  0x0ae: c001000000   |     dump 1                  #%eax should be -1
+  0x0b3: 30f000000000 |     irmovl 0, %eax
+  0x0b9: 30f100000000 |     irmovl 0, %ecx
+  0x0bf: 30f200000000 |     irmovl 0, %edx
+  0x0c5: 30f300000000 |     irmovl 0, %ebx
+  0x0cb: 30f400000000 |     irmovl 0, %esp
+  0x0d1: 30f600000000 |     irmovl 0, %esi
+  0x0d7: 30f700000000 |     irmovl 0, %edi
+  0x0dd: 30f500000000 |     irmovl 0, %ebp
+  0x0e3: 30f303000000 |     irmovl 3, %ebx
+  0x0e9: 6331         |     xorl %ebx, %ecx
+  0x0eb: c001000000   |     dump 1                  #%ecx should be 3
+  0x0f0: 30f302000000 |     irmovl 2, %ebx
+  0x0f6: 6231         |     andl %ebx, %ecx
+  0x0f8: c001000000   |     dump 1                  #%ecx should be 2
+  0x0fd: 30f000000000 |     irmovl 0, %eax
+  0x103: 30f100000000 |     irmovl 0, %ecx
+  0x109: 30f200000000 |     irmovl 0, %edx
+  0x10f: 30f300000000 |     irmovl 0, %ebx
+  0x115: 30f400040000 |     irmovl Stack, %esp
+  0x11b: 30f600000000 |     irmovl 0, %esi
+  0x121: 30f700000000 |     irmovl 0, %edi
+  0x127: 30f500000000 |     irmovl 0, %ebp
+  0x12d: 30f303000000 |     irmovl 3, %ebx
+  0x133: a03f         |     pushl %ebx
+  0x135: 10           |     nop
+  0x136: 10           |     nop
+  0x137: b01f         |     popl %ecx
+  0x139: c001000000   |     dump 1                 #%ecx should be 3
+  0x13e: 30f305000000 |     irmovl 5, %ebx
+  0x144: 10           |     nop
+  0x145: a03f         |     pushl %ebx
+  0x147: 10           |     nop
+  0x148: 10           |     nop
+  0x149: b01f         |     popl %ecx
+  0x14b: c001000000   |     dump 1                 #%ecx should be 5
+  0x150: 30f390010000 |     irmovl Data, %ebx
+  0x156: 30f100000000 |     irmovl 0, %ecx
+  0x15c: 30f0bc0a0000 |     irmovl 0xabc, %eax
+  0x162: 400300000000 |     rmmovl %eax, 0(%ebx)
+  0x168: c005000000   |     dump 5
+  0x16d: 30f390010000 |     irmovl Data, %ebx
+  0x173: 30f100000000 |     irmovl 0, %ecx
+  0x179: 30f0ef0d0000 |     irmovl 0xdef, %eax
+  0x17f: 10           |     nop
+  0x180: 400304000000 |     rmmovl %eax, 4(%ebx)
+  0x186: c005000000   |     dump 5
+  0x18b: 00           |     halt 
+  0x18c: 10           |     nop
+  0x18d: 10           |     nop
+  0x18e: 10           |     nop
+  0x18f: 10           |     nop
+  0x190:              |     .align 4
+  0x190: 00000000     | Data: .long 0
+  0x400:              |     .pos 0x400
+  0x400: 00000000     | Stack: .long 0

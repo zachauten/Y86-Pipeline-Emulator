@@ -1,0 +1,60 @@
+# This program copies the contents of one array into another
+# array and dumps memory after the copy is performed.
+           
+irmovl src, %eax
+irmovl dest, %ebx
+irmovl $4, %edx
+nop
+
+mrmovl (%eax), %ecx
+addl %edx, %eax
+nop
+nop
+rmmovl %ecx, (%ebx)
+addl %edx, %ebx
+nop
+nop
+mrmovl (%eax), %ecx
+addl %edx, %eax
+nop
+nop
+rmmovl %ecx, (%ebx)
+addl %edx, %ebx
+nop
+nop
+mrmovl (%eax), %ecx
+addl %edx, %eax
+nop
+nop
+rmmovl %ecx, (%ebx)
+addl %edx, %ebx
+nop
+nop
+mrmovl (%eax), %ecx
+addl %edx, %eax
+nop
+nop
+rmmovl %ecx, (%ebx)
+addl %edx, %ebx
+nop
+nop
+
+dump 7
+halt 
+
+        .pos 0x100
+        .align 4
+# source array
+src:    .long 2
+        .long 4
+        .long 6
+        .long 8
+
+        .pos 0x200
+        .align 4
+# destination array
+dest:   .long 0
+        .long 0
+        .long 0
+        .long 0
+

@@ -1,0 +1,20 @@
+                      | 
+                      | #
+                      | #   test exception handling
+                      | #
+  0x000: 30f0fdffffff |     irmovl $-3, %eax
+  0x006: 30f126000000 |     irmovl addr, %ecx
+  0x00c: 10           |     nop                      #need nop until stalls are implemented
+  0x00d: 501100000000 |     mrmovl 0(%ecx), %ecx     #this causes a memory error because
+                      |                              #the value in %ecx isn't a multiple of 4
+  0x013: 10           |     nop
+  0x014: 502100000000 |     mrmovl 0(%ecx), %edx     #the rest of this code won't 
+  0x01a: 6200         |     andl %eax, %eax          #change the state of the processor                            
+  0x01c: c001000000   |     dump 1                   #
+  0x021: 00           |     halt
+  0x022: 10           |     nop
+  0x023: 10           |     nop
+  0x024: 10           |     nop
+  0x025: 10           |     nop
+                      | #
+  0x026: 04000000     | addr:  .long 0x4

@@ -1,0 +1,75 @@
+                      | 
+                      | # This tests forwarding to valB when the target instruction is a
+                      | # OPL instruction.
+  0x000: 30f0bc0a0000 |     irmovl 0xabc, %eax
+  0x006: 2002         |     rrmovl %eax, %edx
+  0x008: 6021         |     addl %edx, %ecx         # rrmovl to addl
+  0x00a: c001000000   |     dump 1                  # %eax=0xabc, %edx=0xabc, %ecx=0xabc
+                      | #
+  0x00f: 30f100000000 |     irmovl 0, %ecx
+  0x015: 30f0bc0a0000 |     irmovl 0xabc, %eax
+  0x01b: 2002         |     rrmovl %eax, %edx
+  0x01d: 10           |     nop
+  0x01e: 6021         |     addl %edx, %ecx         # rrmovl to addl
+  0x020: c001000000   |     dump 1                  # %eax=0xabc, %edx=0xabc, %edx
+                      | #
+  0x025: 30f200000000 |     irmovl 0, %edx
+  0x02b: 30f1000d0000 |     irmovl 0xd00, %ecx
+  0x031: 30f0ef000000 |     irmovl 0x0ef, %eax
+  0x037: 6010         |     addl %ecx, %eax         # irmovl to addl
+  0x039: c001000000   |     dump 1                  # %eax=0xdef, %ecx=0xd00
+                      | #
+  0x03e: 30f200000000 |     irmovl 0, %edx
+  0x044: 30f1000d0000 |     irmovl 0xd00, %ecx
+  0x04a: 30f0ef000000 |     irmovl 0x0ef, %eax
+  0x050: 10           |     nop
+  0x051: 6010         |     addl %ecx, %eax         # irmovl to addl
+  0x053: c001000000   |     dump 1                  # %eax=0xdef, %ecx=0xd00
+                      | #
+  0x058: 30f2000a0000 |     irmovl 0xa00, %edx
+  0x05e: 30f0dc000000 |     irmovl Data, %eax
+  0x064: 501000000000 |     mrmovl (%eax), %ecx
+  0x06a: 10           |     nop
+  0x06b: 6012         |     addl %ecx, %edx         #mrmovl to addl
+  0x06d: c001000000   |     dump 1                  #%edx=0xabc, %eax=Data, %ecx=0xbc
+                      | #
+  0x072: 30f200000000 |     irmovl 0, %edx
+  0x078: 30f1bc000000 |     irmovl 0xbc, %ecx
+  0x07e: 30f0000a0000 |     irmovl 0xa00, %eax
+  0x084: 6012         |     addl %ecx, %edx       
+  0x086: 6002         |     addl %eax, %edx         #addl to addl
+  0x088: c001000000   |     dump 1                  #%edx=0xabc, %eax=0xa00, %ecx=0xbc
+                      | #
+  0x08d: 30f200000000 |     irmovl 0, %edx
+  0x093: 30f1ef000000 |     irmovl 0xef, %ecx
+  0x099: 30f0000d0000 |     irmovl 0xd00, %eax
+  0x09f: 6012         |     addl %ecx, %edx       
+  0x0a1: 10           |     nop
+  0x0a2: 6002         |     addl %eax, %edx         #addl to addl
+  0x0a4: c001000000   |     dump 1                  #%edx=0xdef, %eax=0xd00, %ecx=0xef
+                      | #
+  0x0a9: 30f400040000 |     irmovl Stack, %esp
+  0x0af: 30f100000000 |     irmovl 0, %ecx
+  0x0b5: 30f201000000 |     irmovl 1, %edx
+  0x0bb: 30f0dc000000 |     irmovl Data, %eax
+  0x0c1: 500004000000 |     mrmovl 4(%eax), %eax
+  0x0c7: 10           |     nop
+  0x0c8: a00f         |     pushl %eax
+  0x0ca: 10           |     nop
+  0x0cb: 10           |     nop
+  0x0cc: b01f         |     popl %ecx
+  0x0ce: 10           |     nop
+  0x0cf: 6021         |     addl %edx, %ecx        #popl to addl
+  0x0d1: c001000000   |     dump 1                 #%edx = 0x223
+  0x0d6: 00           |     halt
+  0x0d7: 10           |     nop
+  0x0d8: 10           |     nop
+  0x0d9: 10           |     nop
+  0x0da: 10           |     nop
+  0x0dc:              |     .align 4
+  0x0dc: bc000000     | Data: .long 0x0bc
+  0x0e0: 22020000     |       .long 0x222
+  0x0e4: 33030000     |       .long 0x333
+  0x0e8: 44040000     |       .long 0x444
+  0x400:              |     .pos 0x400
+  0x400: 00000000     | Stack: .long 0

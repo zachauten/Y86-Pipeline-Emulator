@@ -1,0 +1,102 @@
+#
+#    This file tests the call and return instructions
+#    by calling a recursive maxTree function. The maxTree
+#    function finds the maximum value in a binary search tree.
+#
+        .pos 0
+        irmovl Stack, %esp
+        irmovl Stack, %ebp
+        jmp Main
+#        
+# Don't change this code
+Main:   irmovl root, %ecx               # root of binary tree
+        mrmovl (%ecx), %ecx
+        nop                             # need this until stalls implemented
+        pushl %ecx
+        call maxTree                    # gets max of tree; result in %eax
+        dump 7
+        halt
+#
+#       int maxTree(Tree * treeptr)
+#       {
+#          if (treeptr == NULL)         # Empty tree
+#              return 0;
+#          else if (treeptr->right == NULL)
+#              return treeptr->value
+#          else
+#              return maxTree(treeptr->right)
+#
+#       }
+#
+maxTree: pushl %ebp                   #set up stack frame
+         rrmovl %esp, %ebp
+         mrmovl 8(%ebp), %ecx         #treeptr parameter
+         nop
+#        Your code goes here;  don't change anything above this
+         mrmovl 8(%ecx), %edx
+         nop
+         andl   %edx, %edx
+         je     Finish
+         mrmovl 4(%ecx), %edx
+         nop
+         andl   %edx, %edx
+         jne    Loop
+         mrmovl 8(%ecx), %edx
+         nop
+         jmp    Finish
+
+Loop:    nop
+         nop
+         pushl  %edx
+         call   maxTree
+
+Finish:  nop
+         nop
+         rrmovl %edx, %eax
+         pushl  %eax
+#        Don't change anything below this.   Return value needs to be
+#        in register %eax
+         rrmovl %ebp, %esp
+         popl %ebp
+         ret
+         nop
+         nop
+         nop
+
+         .align 4
+root:    .long t0
+t0:      .long t1         #pointer to left node
+         .long t2         #pointer to right node
+         .long 0x12       #value of node
+
+t1:      .long t3 
+         .long t4
+         .long 0x6
+
+t3:      .long 0 
+         .long 0
+         .long 0x3
+
+t4:      .long 0 
+         .long 0
+         .long 0x8
+
+t2:      .long t5
+         .long t6
+         .long 0x20
+ 
+t5:      .long 0
+         .long 0
+         .long 0x16
+
+t6:      .long 0
+         .long t7
+         .long 0x22
+
+t7:      .long 0
+         .long 0
+         .long 0x24
+
+         .pos 0x400
+Stack:
+

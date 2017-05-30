@@ -1,0 +1,57 @@
+                      | 
+                      | #This file tests forwarding to VALA when the source of the instruction is
+                      | #a MRMOVL instruction
+  0x000: 30f0a0000000 |     irmovl Data, %eax
+  0x006: 30f100000000 |     irmovl 0, %ecx
+  0x00c: 30f200000000 |     irmovl 0, %edx
+  0x012: 30f300000000 |     irmovl 0, %ebx
+  0x018: 30f600000000 |     irmovl 0, %esi
+  0x01e: 30f700000000 |     irmovl 0, %edi
+  0x024: 30f400040000 |     irmovl Stack, %esp
+  0x02a: 30f500000000 |     irmovl 0, %ebp
+  0x030: 501000000000 |     mrmovl 0(%eax), %ecx
+  0x036: 10           |     nop
+  0x037: 6012         |     addl %ecx, %edx 
+  0x039: c001000000   |     dump 1                   #%edx should be 1, %ecx should be 1
+  0x03e: 501004000000 |     mrmovl 4(%eax), %ecx
+  0x044: 10           |     nop
+  0x045: 6112         |     subl   %ecx, %edx
+  0x047: c001000000   |     dump 1                  #%ecx should be 2, %edx should be -1
+  0x04c: 501008000000 |     mrmovl 8(%eax), %ecx
+  0x052: 10           |     nop
+  0x053: 6212         |     andl %ecx, %edx
+  0x055: c001000000   |     dump 1                  #%ecx should 3, %edx should be 3
+  0x05a: 50100c000000 |     mrmovl 12(%eax), %ecx
+  0x060: 10           |     nop
+  0x061: 6312         |     xorl %ecx, %edx         #%ecx should be 4, %edx should be 7
+  0x063: c001000000   |     dump 1
+                      | #
+  0x068: 501000000000 |     mrmovl 0(%eax), %ecx
+  0x06e: 10           |     nop
+  0x06f: 2012         |     rrmovl %ecx, %edx
+  0x071: c001000000   |     dump 1                 #%ecx, %edx should both be 1
+  0x076: 501004000000 |     mrmovl 4(%eax), %ecx
+  0x07c: 10           |     nop
+  0x07d: a01f         |     pushl %ecx
+  0x07f: 10           |     nop
+  0x080: 10           |     nop
+  0x081: b02f         |     popl %edx
+  0x083: c001000000   |     dump 1                #%ecx, %edx should both be 2
+                      | #   
+  0x088: 501000000000 |     mrmovl 0(%eax), %ecx
+  0x08e: 10           |     nop
+  0x08f: 401010000000 |     rmmovl %ecx, 16(%eax)
+  0x095: c005000000   |     dump 5
+  0x09a: 00           |     halt
+  0x09b: 10           |     nop
+  0x09c: 10           |     nop
+  0x09d: 10           |     nop
+  0x09e: 10           |     nop
+  0x0a0:              |     .align 4
+  0x0a0: 01000000     | Data:   .long 1
+  0x0a4: 02000000     |         .long 2
+  0x0a8: 03000000     |         .long 3
+  0x0ac: 04000000     |         .long 4
+  0x0b0: 00000000     |         .long 0
+  0x400:              |    .pos 0x400
+  0x400: 00000000     | Stack: .long 0 

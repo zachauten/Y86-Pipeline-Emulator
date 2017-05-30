@@ -1,0 +1,25 @@
+                      | 
+                      | #
+                      | #   This file tests the JNE instruction
+                      | #
+  0x000: 30f004000000 |     irmovl  4, %eax
+  0x006: 30f103000000 |     irmovl  3, %ecx
+  0x00c: 6010         |     addl    %ecx, %eax
+  0x00e: 741e000000   |     jne   target1          #take branch
+  0x013: c001000000   |     dump 1                 #This shouldn't be executed
+  0x018: c001000000   |     dump 1                 #This shouldn't be executed
+  0x01d: 00           |     halt
+  0x01e:              | target1:
+  0x01e: c004000000   |     dump 4                 #This should be executed
+  0x023: c004000000   |     dump 4                 #This should be executed
+  0x028: 30f003000000 |     irmovl  3, %eax
+  0x02e: 30f1fdffffff |     irmovl  -3, %ecx
+  0x034: 6010         |     addl    %ecx, %eax
+  0x036: 7446000000   |     jne target2            #don't take branch
+  0x03b: c004000000   |     dump 4                 #This should be executed
+  0x040: c004000000   |     dump 4                 #This should be executed
+  0x045: 00           |     halt
+  0x046:              | target2:
+  0x046: 10           |     nop                    #Control will be transferred
+  0x047: 10           |     nop                    #and then go back to dump 4
+  0x048: 00           |     halt

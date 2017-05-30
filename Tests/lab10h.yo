@@ -1,0 +1,97 @@
+                      | 
+                      | # This tests forwarding to valB when the target instruction is a
+                      | # mrmovl instruction.
+  0x000: 30f068010000 |     irmovl Data, %eax
+  0x006: 501000000000 |     mrmovl 0(%eax), %ecx    #irmovl to mrmovl
+  0x00c: c001000000   |     dump 1                  # %eax=Data, %ecx=m[Data]
+                      | #
+  0x011: 30f000000000 |     irmovl 0, %eax
+  0x017: 30f100000000 |     irmovl 0, %ecx
+  0x01d: 30f068010000 |     irmovl Data, %eax
+  0x023: 10           |     nop
+  0x024: 501000000000 |     mrmovl 0(%eax), %ecx    #irmovl to mrmovl
+  0x02a: c001000000   |     dump 1                  # %eax=Data, %ecx=m[Data]
+                      | #
+  0x02f: 30f000000000 |     irmovl 0, %eax
+  0x035: 30f100000000 |     irmovl 0, %ecx
+  0x03b: 30f068010000 |     irmovl Data, %eax
+  0x041: 30f104000000 |     irmovl 4, %ecx
+  0x047: 6010         |     addl %ecx, %eax
+  0x049: 501000000000 |     mrmovl 0(%eax), %ecx    # addl to mrmovl
+  0x04f: c001000000   |     dump 1                  # %eax=Data + 4, %ecx=m[eax]
+                      | #
+  0x054: 30f000000000 |     irmovl 0, %eax
+  0x05a: 30f100000000 |     irmovl 0, %ecx
+  0x060: 30f068010000 |     irmovl Data, %eax
+  0x066: 30f104000000 |     irmovl 4, %ecx
+  0x06c: 6010         |     addl %ecx, %eax
+  0x06e: 10           |     nop
+  0x06f: 501000000000 |     mrmovl 0(%eax), %ecx    # addl to mrmovl
+  0x075: c001000000   |     dump 1                  # %eax=Data + 4, %ecx=m[eax]
+                      | #
+  0x07a: 30f000000000 |     irmovl 0, %eax
+  0x080: 30f100000000 |     irmovl 0, %ecx
+  0x086: 30f200000000 |     irmovl 0, %edx
+  0x08c: 30f068010000 |     irmovl Data, %eax
+  0x092: 30f108000000 |     irmovl 8, %ecx
+  0x098: 6010         |     addl %ecx, %eax
+  0x09a: 2002         |     rrmovl %eax, %edx
+  0x09c: 501200000000 |     mrmovl 0(%edx), %ecx    # rrmovl to mrmovl
+  0x0a2: c001000000   |     dump 1                  # %eax,%edx=Data + 8, %ecx=m[eax]
+                      | #
+  0x0a7: 30f000000000 |     irmovl 0, %eax
+  0x0ad: 30f100000000 |     irmovl 0, %ecx
+  0x0b3: 30f200000000 |     irmovl 0, %edx
+  0x0b9: 30f068010000 |     irmovl Data, %eax
+  0x0bf: 30f108000000 |     irmovl 8, %ecx
+  0x0c5: 6010         |     addl %ecx, %eax
+  0x0c7: 2002         |     rrmovl %eax, %edx
+  0x0c9: 10           |     nop
+  0x0ca: 501200000000 |     mrmovl 0(%edx), %ecx    # rrmovl to mrmovl
+  0x0d0: c001000000   |     dump 1                  # %eax,%edx=Data + 8, %ecx=m[eax]
+                      | #
+  0x0d5: 30f000000000 |     irmovl 0, %eax
+  0x0db: 30f100000000 |     irmovl 0, %ecx
+  0x0e1: 30f200000000 |     irmovl 0, %edx
+  0x0e7: 30f068010000 |     irmovl Data, %eax
+  0x0ed: 400000000000 |     rmmovl %eax, 0(%eax)   #m[Data] = Data
+  0x0f3: 501000000000 |     mrmovl 0(%eax), %ecx   #%ecx = Data
+  0x0f9: 10           |     nop
+  0x0fa: 500104000000 |     mrmovl 4(%ecx), %eax   #mrmovl to mrmovl
+  0x100: c005000000   |     dump 5                 #%eax = m[Data + 4]     
+                      | #
+  0x105: 30f000000000 |     irmovl 0, %eax
+  0x10b: 30f100000000 |     irmovl 0, %ecx
+  0x111: 30f200000000 |     irmovl 0, %edx
+  0x117: 30f068010000 |     irmovl Data, %eax
+  0x11d: 400000000000 |     rmmovl %eax, 0(%eax)   #m[Data] = Data
+  0x123: 501000000000 |     mrmovl 0(%eax), %ecx   #%ecx = Data
+  0x129: 10           |     nop
+  0x12a: 10           |     nop
+  0x12b: 500104000000 |     mrmovl 4(%ecx), %eax   #mrmovl to mrmovl
+  0x131: c005000000   |     dump 5                 #%eax = m[Data + 4]     
+                      | #
+  0x136: 30f400040000 |     irmovl Stack, %esp
+  0x13c: 30f068010000 |     irmovl Data, %eax
+  0x142: 30f100000000 |     irmovl 0, %ecx
+  0x148: 30f200000000 |     irmovl 0, %edx
+  0x14e: a00f         |     pushl %eax
+  0x150: 10           |     nop
+  0x151: 10           |     nop
+  0x152: b01f         |     popl %ecx
+  0x154: 10           |     nop
+  0x155: 500108000000 |     mrmovl 8(%ecx), %eax   #mrmovl to mrmovl
+  0x15b: c005000000   |     dump 5                 #%eax = m[Data + 8]     
+                      | #
+  0x160: 00           |     halt
+  0x161: 10           |     nop
+  0x162: 10           |     nop
+  0x163: 10           |     nop
+  0x164: 10           |     nop
+  0x168:              |     .align 4
+  0x168: 11010000     | Data: .long 0x111
+  0x16c: 22020000     |       .long 0x222
+  0x170: 33030000     |       .long 0x333
+  0x174: 44040000     |       .long 0x444
+  0x400:              |     .pos 0x400
+  0x400: 00000000     | Stack: .long 0

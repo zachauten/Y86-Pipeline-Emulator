@@ -1,0 +1,68 @@
+# This is an input program that tests all six cases of forwarding for both
+# valA and valB
+
+#forward e_valE for valA
+irmovl $3, %ecx
+subl %ecx, %edx
+
+#forward M_valE for valA
+irmovl $4, %ecx
+nop
+subl %ecx, %edx
+
+#forward W_valE for valA
+irmovl $5, $ecx
+nop
+nop
+subl %ecx, %edx
+
+#forward m_valM for valA
+mrmovl (%ebx), %edx
+nop
+addl %edx, %ecx
+
+#forward W_valM for valA
+mrmovl (%edx), %edx
+nop
+nop
+addl %edx, %ecx
+
+#forward no forwarding for valA
+irmovl $5, %edx
+nop
+nop
+nop
+addl %edx, %ecx
+
+#forward e_valE for valB
+irmovl $3, %ecx
+subl %edx, %ecx
+
+#forward M_valE for valB
+irmovl $4, %ecx
+nop
+subl %edx, %ecx
+
+#forward W_valE for valB
+irmovl $5, $ecx
+nop
+nop
+subl %edx, %ecx
+
+#forward m_valM for valB
+mrmovl (%ebx), %edx
+nop
+addl %ecx, %edx
+
+#forward W_valM for valB
+mrmovl (%edx), %edx
+nop
+nop
+addl %ecx, %edx
+
+#forward no forwarding for valB
+irmovl $5, %edx
+nop
+nop
+nop
+addl %edx, %ecx

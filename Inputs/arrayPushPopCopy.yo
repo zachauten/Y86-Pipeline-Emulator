@@ -1,0 +1,54 @@
+                      | 
+                      | # This program copies the contents of one array into another
+                      | # array using pushl and popl instead of mrmovl and rmmovl.
+                      | # Memory is dumped after the copy is performed.
+                      | 
+                      |            
+  0x000: 30f400010000 | irmovl src, %esp
+  0x006: 10           | nop
+  0x007: 10           | nop
+  0x008: b00f         | popl   %eax
+  0x00a: 10           | nop
+  0x00b: 10           | nop
+  0x00c: b01f         | popl   %ecx
+  0x00e: 10           | nop
+  0x00f: 10           | nop
+  0x010: b06f         | popl   %esi
+  0x012: 10           | nop
+  0x013: 10           | nop
+  0x014: b07f         | popl   %edi
+  0x016: 30f410020000 | irmovl dest, %esp
+  0x01c: 10           | nop
+  0x01d: 10           | nop
+  0x01e: a07f         | pushl  %edi
+  0x020: 10           | nop
+  0x021: 10           | nop
+  0x022: a06f         | pushl  %esi
+  0x024: 10           | nop
+  0x025: 10           | nop
+  0x026: a01f         | pushl  %ecx
+  0x028: 10           | nop
+  0x029: 10           | nop
+  0x02a: a00f         | pushl  %eax
+  0x02c: 10           | nop
+  0x02d: 10           | nop
+                      | 
+  0x02e: c007000000   | dump 7
+  0x033: 00           | halt 
+                      | 
+  0x100:              |         .pos 0x100
+  0x100:              |         .align 4
+                      | # source array
+  0x100: 02000000     | src:    .long 2
+  0x104: 04000000     |         .long 4
+  0x108: 06000000     |         .long 6
+  0x10c: 08000000     |         .long 8
+                      | 
+  0x200:              |         .pos 0x200
+  0x200:              |         .align 4
+                      | # destination array
+  0x200: 00000000     |         .long 0
+  0x204: 00000000     |         .long 0
+  0x208: 00000000     |         .long 0
+  0x20c: 00000000     |         .long 0
+  0x210:              | dest:

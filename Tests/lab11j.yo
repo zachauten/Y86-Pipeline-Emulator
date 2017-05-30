@@ -1,0 +1,59 @@
+                      | 
+                      | #
+                      | #    This file tests the call and return instructions
+                      | #
+  0x000:              |     .pos 0
+  0x000: 30f400020000 |     irmovl Stack, %esp
+  0x006: 30f500020000 |     irmovl Stack, %ebp
+  0x00c: 7011000000   |     jmp Main
+                      | #
+  0x011: 30f006000000 | Main:   irmovl $6, %eax                  #top
+  0x017: a00f         |         pushl %eax
+  0x019: 30f002000000 |         irmovl $2, %eax                  #bottom
+  0x01f: a00f         |         pushl %eax           
+  0x021: 802c000000   |         call Sum
+  0x026: c007000000   |         dump 7
+  0x02b: 00           |         halt
+                      | #
+                      | #       int Sum(int bottom, int top)
+                      | #       {
+                      | #          if (bottom > top)
+                      | #              return 0;
+                      | #          else
+                      | #              return bottom + sum(bottom + 1, top);
+                      | #
+                      | #       }
+                      | #
+  0x02c: a05f         | Sum:    pushl %ebp
+  0x02e: 2045         |         rrmovl %esp, %ebp
+  0x030: 501508000000 |         mrmovl 8(%ebp), %ecx         #ecx should be bottom
+  0x036: 50250c000000 |         mrmovl 12(%ebp), %edx        #edx should be top
+  0x03c: 2013         |         rrmovl %ecx, %ebx
+  0x03e: 6123         |         subl %edx, %ebx              #compute bottom - top
+  0x040: 7667000000   |         jg done
+  0x045: 30f301000000 |         irmovl 1, %ebx
+  0x04b: 6031         |         addl   %ebx, %ecx
+  0x04d: a02f         |         pushl  %edx
+  0x04f: a01f         |         pushl  %ecx
+  0x051: 802c000000   |         call Sum
+  0x056: 501508000000 |         mrmovl 8(%ebp), %ecx         #get bottom again
+  0x05c: 10           |         nop
+  0x05d: 6010         |         addl %ecx, %eax              #add bottom to value returned from call
+  0x05f: 2054         |         rrmovl %ebp, %esp
+  0x061: b05f         |         popl %ebp
+  0x063: 90           |         ret
+  0x064: 10           |         nop
+  0x065: 10           |         nop
+  0x066: 10           |         nop
+  0x067: 10           | done:   nop
+  0x068: 10           |         nop
+  0x069: 30f000000000 |         irmovl 0, %eax 
+  0x06f: 2054         |         rrmovl %ebp, %esp
+  0x071: b05f         |         popl %ebp
+  0x073: 90           |         ret
+  0x074: 10           |         nop
+  0x075: 10           |         nop
+  0x076: 10           |         nop
+  0x200:              |         .pos 0x200
+  0x200:              | Stack:
+                      | 

@@ -1,0 +1,53 @@
+# This program copies the contents of one array into another
+# array using pushl and popl instead of mrmovl and rmmovl.
+# Memory is dumped after the copy is performed.
+
+           
+irmovl src, %esp
+nop
+nop
+popl   %eax
+nop
+nop
+popl   %ecx
+nop
+nop
+popl   %esi
+nop
+nop
+popl   %edi
+irmovl dest, %esp
+nop
+nop
+pushl  %edi
+nop
+nop
+pushl  %esi
+nop
+nop
+pushl  %ecx
+nop
+nop
+pushl  %eax
+nop
+nop
+
+dump 7
+halt 
+
+        .pos 0x100
+        .align 4
+# source array
+src:    .long 2
+        .long 4
+        .long 6
+        .long 8
+
+        .pos 0x200
+        .align 4
+# destination array
+        .long 0
+        .long 0
+        .long 0
+        .long 0
+dest:

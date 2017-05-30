@@ -1,0 +1,12 @@
+                      | 
+                      | #  
+                      | #   This program tests the stall required after a mrmovl instruction
+                      | #
+  0x000: 30f103000000 |     irmovl 3, %ecx
+  0x006: 30f01c000000 |     irmovl array, %eax
+  0x00c: 503000000000 |     mrmovl 0(%eax), %ebx
+  0x012: 6013         |     addl %ecx, %ebx
+  0x014: c007000000   |     dump 7
+  0x019: 00           |     halt
+  0x01c:              |     .align 4
+  0x01c: 04000000     | array:  .long 4

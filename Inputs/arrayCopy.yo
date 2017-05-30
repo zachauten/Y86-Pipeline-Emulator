@@ -1,0 +1,61 @@
+                      | 
+                      | # This program copies the contents of one array into another
+                      | # array and dumps memory after the copy is performed.
+                      |            
+  0x000: 30f000010000 | irmovl src, %eax
+  0x006: 30f300020000 | irmovl dest, %ebx
+  0x00c: 30f204000000 | irmovl $4, %edx
+  0x012: 10           | nop
+                      | 
+  0x013: 501000000000 | mrmovl (%eax), %ecx
+  0x019: 6020         | addl %edx, %eax
+  0x01b: 10           | nop
+  0x01c: 10           | nop
+  0x01d: 401300000000 | rmmovl %ecx, (%ebx)
+  0x023: 6023         | addl %edx, %ebx
+  0x025: 10           | nop
+  0x026: 10           | nop
+  0x027: 501000000000 | mrmovl (%eax), %ecx
+  0x02d: 6020         | addl %edx, %eax
+  0x02f: 10           | nop
+  0x030: 10           | nop
+  0x031: 401300000000 | rmmovl %ecx, (%ebx)
+  0x037: 6023         | addl %edx, %ebx
+  0x039: 10           | nop
+  0x03a: 10           | nop
+  0x03b: 501000000000 | mrmovl (%eax), %ecx
+  0x041: 6020         | addl %edx, %eax
+  0x043: 10           | nop
+  0x044: 10           | nop
+  0x045: 401300000000 | rmmovl %ecx, (%ebx)
+  0x04b: 6023         | addl %edx, %ebx
+  0x04d: 10           | nop
+  0x04e: 10           | nop
+  0x04f: 501000000000 | mrmovl (%eax), %ecx
+  0x055: 6020         | addl %edx, %eax
+  0x057: 10           | nop
+  0x058: 10           | nop
+  0x059: 401300000000 | rmmovl %ecx, (%ebx)
+  0x05f: 6023         | addl %edx, %ebx
+  0x061: 10           | nop
+  0x062: 10           | nop
+                      | 
+  0x063: c007000000   | dump 7
+  0x068: 00           | halt 
+                      | 
+  0x100:              |         .pos 0x100
+  0x100:              |         .align 4
+                      | # source array
+  0x100: 02000000     | src:    .long 2
+  0x104: 04000000     |         .long 4
+  0x108: 06000000     |         .long 6
+  0x10c: 08000000     |         .long 8
+                      | 
+  0x200:              |         .pos 0x200
+  0x200:              |         .align 4
+                      | # destination array
+  0x200: 00000000     | dest:   .long 0
+  0x204: 00000000     |         .long 0
+  0x208: 00000000     |         .long 0
+  0x20c: 00000000     |         .long 0
+                      | 

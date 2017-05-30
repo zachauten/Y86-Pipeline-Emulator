@@ -1,0 +1,9 @@
+                      | 
+                      | # This is an input program that tests all six cases of forwarding for valB.
+                      | 
+                      | #forward e_valE for valE
+  0x000: 30f103000000 | irmovl $3, %ecx
+  0x006: 6112         | subl %ecx, %edx
+                      | 
+                      | #forward
+                      | 

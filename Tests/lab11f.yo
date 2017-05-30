@@ -1,0 +1,35 @@
+                      | 
+                      | #
+                      | #   This file tests the JG instruction
+                      | #
+  0x000: 30f004000000 |     irmovl  4, %eax
+  0x006: 30f1fbffffff |     irmovl  -5, %ecx
+  0x00c: 6010         |     addl    %ecx, %eax     #result is less than 0
+  0x00e: 7658000000   |     jg    target1          #don't take branch
+  0x013: c001000000   |     dump 1                 #This should be executed
+  0x018: c001000000   |     dump 1                 #This should be executed
+  0x01d: 30f004000000 |     irmovl 4, %eax
+  0x023: 30f1fcffffff |     irmovl -4, %ecx
+  0x029: 6010         |     addl    %ecx, %eax     #result is equal to 0
+  0x02b: 765b000000   |     jg  target2            #won't take branch   
+  0x030: c001000000   |     dump 1
+  0x035: c001000000   |     dump 1
+  0x03a: 30f005000000 |     irmovl 5, %eax
+  0x040: 30f1fcffffff |     irmovl -4, %ecx
+  0x046: 6010         |     addl    %ecx, %eax     #result is greater than 0
+  0x048: 765e000000   |     jg  target3            #will take branch   
+  0x04d: c004000000   |     dump 4
+  0x052: c004000000   |     dump 4
+  0x057: 00           |     halt
+  0x058:              | target1:
+  0x058: 10           |     nop                    #control will transfer here
+  0x059: 10           |     nop                    #and then back to the dump 1
+  0x05a: 00           |     halt
+  0x05b:              | target2:    
+  0x05b: 10           |     nop                    #control will transfer here 
+  0x05c: 10           |     nop                    #and then back to dump 1
+  0x05d: 00           |     halt
+  0x05e:              | target3:
+  0x05e: c001000000   |     dump 1                 #This should be executed
+  0x063: c001000000   |     dump 1                 #This should be executed
+  0x068: 00           |     halt

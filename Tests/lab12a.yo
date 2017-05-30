@@ -1,0 +1,41 @@
+                      | 
+                      | #
+                      | #    This file tests the bubble and stall caused by halt and
+                      | #    ret instructions
+                      | #
+  0x000:              |     .pos 0
+  0x000: 30f400010000 |     irmovl Stack, %esp
+  0x006: 30f500010000 |     irmovl Stack, %ebp
+  0x00c: 7011000000   |     jmp Main
+                      | #
+  0x011: 30f00b000000 | Main:   irmovl $11, %eax
+  0x017: a00f         |         pushl %eax
+  0x019: 804c000000   |         call AddOne
+  0x01e: b00f         |         popl %eax
+  0x020: c007000000   |         dump 7
+  0x025: 30f00d000000 |         irmovl $13, %eax
+  0x02b: a00f         |         pushl %eax
+  0x02d: 804c000000   |         call AddOne
+  0x032: b00f         |         popl %eax
+  0x034: c007000000   |         dump 7
+  0x039: 00           |         halt
+  0x03a: 30f69a785634 |         irmovl 0x3456789a, %esi      #these will be fetched
+  0x040: 30f79a785634 |         irmovl 0x3456789a, %edi      #and turned to nops
+  0x046: 30f39a785634 |         irmovl 0x3456789a, %ebx      #when they reach W
+                      | #
+  0x04c: c007000000   | AddOne: dump 7 
+  0x051: a05f         |         pushl %ebp
+  0x053: 2045         |         rrmovl %esp, %ebp
+  0x055: 501508000000 |         mrmovl 8(%ebp), %ecx         #ecx should be 11 (0xb)
+  0x05b: 30f201000000 |         irmovl 1, %edx
+  0x061: 6021         |         addl %edx, %ecx
+  0x063: 401508000000 |         rmmovl %ecx, 8(%ebp)         #set 8(%ebp) to 12 (0xc)
+  0x069: 2054         |         rrmovl %ebp, %esp
+  0x06b: b05f         |         popl %ebp
+  0x06d: 90           |         ret
+  0x06e: 30f612efcdab |         irmovl 0xabcdef12, %esi      #the first instruction will
+  0x074: 30f712efcdab |         irmovl 0xabcdef12, %edi      #fetched and changed to nop
+  0x07a: 30f312efcdab |         irmovl 0xabcdef12, %ebx      #three times
+  0x100:              |         .pos 0x100
+  0x100:              | Stack:
+                      | 

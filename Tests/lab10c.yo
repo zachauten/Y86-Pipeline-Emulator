@@ -1,0 +1,173 @@
+                      | 
+                      | #   This file tests forwarding into VALA
+                      | #   Value being forwarded is produced by a POPL instruction.
+                      | #   Forwarding is through the
+                      | #   register file when two NOPs separate the instructions.  Forwarding
+                      | #   is from the W register to the Decode stage when one NOP separates
+                      | #   the instructions.
+  0x000: 30f400040000 |     irmovl Stack, %esp
+  0x006: 30f0ffffffff |     irmovl -1, %eax
+  0x00c: 30f102000000 |     irmovl 2, %ecx
+  0x012: a01f         |     pushl %ecx        #need two NOPS to allow esp to be calculated
+  0x014: 10           |     nop
+  0x015: 10           |     nop
+  0x016: b02f         |     popl  %edx
+  0x018: 10           |     nop               #two nop between popl and addl
+  0x019: 10           |     nop               
+  0x01a: 6020         |     addl %edx, %eax   #eax should be set to 1
+  0x01c: c001000000   |     dump 1            #dump number 1
+                      | #
+  0x021: 30f000000000 |     irmovl 0, %eax
+  0x027: 30f100000000 |     irmovl 0, %ecx
+  0x02d: 30f200000000 |     irmovl 0, %edx
+  0x033: 30f0ffffffff |     irmovl -1, %eax
+  0x039: 30f102000000 |     irmovl 2, %ecx
+  0x03f: a01f         |     pushl %ecx
+  0x041: 10           |     nop                 #need two NOPS to allow esp to be calculated
+  0x042: 10           |     nop
+  0x043: b02f         |     popl  %edx          
+  0x045: 10           |     nop                 #one nop between popl and addl
+  0x046: 6020         |     addl %edx, %eax     #eax should be set to 1
+  0x048: c001000000   |     dump 1              #dump number 2
+                      | #
+  0x04d: 30f000000000 |     irmovl 0, %eax
+  0x053: 30f100000000 |     irmovl 0, %ecx
+  0x059: 30f200000000 |     irmovl 0, %edx
+  0x05f: 30f003000000 |     irmovl 3, %eax
+  0x065: 30f102000000 |     irmovl 2, %ecx
+  0x06b: a01f         |     pushl %ecx
+  0x06d: 10           |     nop                 #need two NOPS to allow esp to be calculated
+  0x06e: 10           |     nop
+  0x06f: b02f         |     popl  %edx          
+  0x071: 10           |     nop                 #two nops between popl and andl
+  0x072: 10           |     nop               
+  0x073: 6220         |     andl %edx, %eax     #eax should be set to 2
+  0x075: c001000000   |     dump 1              #dump number 3
+                      | #
+  0x07a: 30f000000000 |     irmovl 0, %eax
+  0x080: 30f100000000 |     irmovl 0, %ecx
+  0x086: 30f200000000 |     irmovl 0, %edx
+  0x08c: 30f003000000 |     irmovl 3, %eax
+  0x092: 30f102000000 |     irmovl 2, %ecx
+  0x098: a01f         |     pushl %ecx
+  0x09a: 10           |     nop                 #need two NOPS to allow esp to be calculated
+  0x09b: 10           |     nop
+  0x09c: b02f         |     popl  %edx          
+  0x09e: 10           |     nop                 #one nop between popl and andl
+  0x09f: 6220         |     andl %edx, %eax     #eax should be set to 2
+  0x0a1: c001000000   |     dump 1              #dump number 4
+                      | #
+  0x0a6: 30f000000000 |     irmovl 0, %eax
+  0x0ac: 30f100000000 |     irmovl 0, %ecx
+  0x0b2: 30f200000000 |     irmovl 0, %edx
+  0x0b8: 30f003000000 |     irmovl 3, %eax
+  0x0be: 30f102000000 |     irmovl 2, %ecx
+  0x0c4: a01f         |     pushl %ecx
+  0x0c6: 10           |     nop                 #need two NOPS to allow esp to be calculated
+  0x0c7: 10           |     nop
+  0x0c8: b02f         |     popl  %edx          
+  0x0ca: 10           |     nop                 #two nops between popl and xorl
+  0x0cb: 10           |     nop                
+  0x0cc: 6320         |     xorl %edx, %eax     #eax should be set to 1
+  0x0ce: c001000000   |     dump 1              #dump number 5
+                      | #
+  0x0d3: 30f000000000 |     irmovl 0, %eax
+  0x0d9: 30f100000000 |     irmovl 0, %ecx
+  0x0df: 30f200000000 |     irmovl 0, %edx
+  0x0e5: 30f003000000 |     irmovl 3, %eax
+  0x0eb: 30f102000000 |     irmovl 2, %ecx
+  0x0f1: a01f         |     pushl %ecx
+  0x0f3: 10           |     nop                 #need two NOPS to allow esp to be calculated
+  0x0f4: 10           |     nop
+  0x0f5: b02f         |     popl  %edx          
+  0x0f7: 10           |     nop                 #one nop between popl and xorl
+  0x0f8: 6320         |     xorl %edx, %eax     #eax should be set to 1
+  0x0fa: c001000000   |     dump 1              #dump number 6
+                      | #
+  0x0ff: 30f000000000 |     irmovl 0, %eax
+  0x105: 30f100000000 |     irmovl 0, %ecx
+  0x10b: 30f200000000 |     irmovl 0, %edx
+  0x111: 30f001000000 |     irmovl 1, %eax
+  0x117: 30f102000000 |     irmovl 2, %ecx
+  0x11d: a01f         |     pushl %ecx
+  0x11f: 10           |     nop                 #need two NOPS to allow esp to be calculated
+  0x120: 10           |     nop
+  0x121: b02f         |     popl  %edx          
+  0x123: 10           |     nop                 #two nops between popl and subl
+  0x124: 10           |     nop
+  0x125: 6120         |     subl %edx, %eax     #eax should be set to -1
+  0x127: c001000000   |     dump 1              #dump number 7
+                      | #
+  0x12c: 30f000000000 |     irmovl 0, %eax
+  0x132: 30f100000000 |     irmovl 0, %ecx
+  0x138: 30f200000000 |     irmovl 0, %edx
+  0x13e: 30f001000000 |     irmovl 1, %eax
+  0x144: 30f102000000 |     irmovl 2, %ecx
+  0x14a: a01f         |     pushl %ecx
+  0x14c: 10           |     nop                 #need two NOPS to allow esp to be calculated
+  0x14d: 10           |     nop
+  0x14e: b02f         |     popl  %edx          
+  0x150: 10           |     nop                 #one nop between popl and subl
+  0x151: 6120         |     subl %edx, %eax     #eax should be set to -1
+  0x153: c001000000   |     dump 1              #dump number 8
+                      | #
+                      | #test forwarding from popl to rrmovl
+  0x158: 30f000000000 |     irmovl 0, %eax
+  0x15e: 30f100000000 |     irmovl 0, %ecx
+  0x164: 30f200000000 |     irmovl 0, %edx
+  0x16a: 30f101000000 |     irmovl 1, %ecx
+  0x170: a01f         |     pushl %ecx
+  0x172: 10           |     nop                 #need two NOPS to allow esp to be calculated
+  0x173: 10           |     nop
+  0x174: b00f         |     popl  %eax          
+  0x176: 10           |     nop                 #one nop between popl and rrmovl
+  0x177: 2002         |     rrmovl %eax, %edx     #eax, edx, ecx should be set to 1
+  0x179: c001000000   |     dump 1              #dump number 9
+                      | #
+  0x17e: 30f001000000 |     irmovl 1, %eax
+  0x184: 30f100000000 |     irmovl 0, %ecx
+  0x18a: 30f200000000 |     irmovl 0, %edx
+  0x190: a00f         |     pushl %eax
+  0x192: 10           |     nop                 #need two NOPS to allow esp to be calculated
+  0x193: 10           |     nop
+  0x194: b01f         |     popl  %ecx          
+  0x196: 10           |     nop                 #two nops between popl and rrmovl
+  0x197: 10           |     nop          
+  0x198: 2012         |     rrmovl %ecx, %edx     #eax, ecx, edx should be set to 1
+  0x19a: c001000000   |     dump 1                #dump number 10
+                      | #
+                      | #Test forwarding from popl to pushl
+  0x19f: 30f001000000 |     irmovl 1, %eax
+  0x1a5: 30f100000000 |     irmovl 0, %ecx
+  0x1ab: 30f200000000 |     irmovl 0, %edx
+  0x1b1: a00f         |     pushl %eax
+  0x1b3: 10           |     nop                 #need two NOPS to allow esp to be calculated
+  0x1b4: 10           |     nop
+  0x1b5: b01f         |     popl  %ecx          
+  0x1b7: 10           |     nop
+  0x1b8: 10           |     nop                 #one nop between popl and pushl
+  0x1b9: a01f         |     pushl %ecx          
+  0x1bb: 10           |     nop
+  0x1bc: 10           |     nop
+  0x1bd: b02f         |     popl %edx     #edx, eax, ecx should be set to 1
+  0x1bf: c001000000   |     dump 1        #dump number 11
+  0x1c4: 30f0bc0a0000 |     irmovl 0xabc, %eax
+  0x1ca: 30f3f4010000 |     irmovl Data, %ebx
+  0x1d0: 30f100000000 |     irmovl 0, %ecx
+  0x1d6: 30f200000000 |     irmovl 0, %edx
+  0x1dc: a00f         |     pushl %eax
+  0x1de: 10           |     nop                 #need two NOPS to allow esp to be calculated
+  0x1df: 10           |     nop
+  0x1e0: b01f         |     popl  %ecx          
+  0x1e2: 10           |     nop
+  0x1e3: 401300000000 |     rmmovl %ecx, 0(%ebx)
+  0x1e9: c005000000   |     dump  5
+  0x1ee: 00           |     halt
+  0x1ef: 10           |     nop
+  0x1f0: 10           |     nop
+  0x1f1: 10           |     nop
+  0x1f2: 10           |     nop
+  0x1f4:              |     .align 4
+  0x1f4: 00000000     | Data:  .long 0
+  0x400:              |     .pos 0x400
+  0x400: 00000000     | Stack: .long   0
